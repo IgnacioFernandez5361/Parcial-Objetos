@@ -1,0 +1,31 @@
+import expedicion.*
+import vikingos.*
+import clasesSociales.*
+
+describe "tests vikingos"{
+	test "error1"{
+		
+		const vikingo = new Vikingo(armas=1,cantidadDeHijos=2,hectareas=2,claseSocial=jarl,
+			oficio=soldado,vidasCobradas=0,monedasDeOro=20)
+		const expedicion = new Expedicion(destinos=[],vikingos=[])
+		
+		assert.throwsException({expedicion.subirAUnVikingo(vikingo)})
+	}
+	
+	test "valeLaPena"{
+		const vikingo1 = new Vikingo(armas=3,cantidadDeHijos=2,hectareas=2,
+			claseSocial=karl,oficio=soldado,vidasCobradas=0,monedasDeOro=20)
+		const vikingo2 = new Vikingo(armas=1,cantidadDeHijos=3,hectareas=4,
+			claseSocial=karl,oficio=soldado,vidasCobradas=1,monedasDeOro=20)
+		const aldeaA = new Aldea(cantidadDeCrucifijos=20)
+		const expedicion = new Expedicion(destinos=[aldeaA],vikingos=[vikingo1,vikingo2])
+		assert.that(expedicion.valeLaPena())
+	}
+	
+	test "ragnar"{
+		const ragnar = new Vikingo(armas=3,cantidadDeHijos=2,hectareas=2,
+			claseSocial=karl,oficio=soldado,vidasCobradas=0,monedasDeOro=20)
+		ragnar.escalar()
+		assert.equals(thrall,ragnar.claseSocial())
+	}
+}
