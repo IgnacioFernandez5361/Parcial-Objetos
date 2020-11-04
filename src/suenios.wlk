@@ -54,13 +54,14 @@ class Persona {
 	}
 	
 	method suenioMultiple(suenioMultiple){
-			
+		
 	}
 }
 
 class Suenio {
 	var cumplido = false
-	var felicidonios = 0
+
+	method felicidonios()
 	
 	method estaPendiente(){
 		return !cumplido
@@ -74,7 +75,7 @@ class Suenio {
 		self.validar(persona)
 		self.realizar(persona)
 		self.cumplir()
-		persona.sumarFelicidonios(felicidonios)
+		persona.sumarFelicidonios(self.felicidonios())
 	}
 	
 	method cumplir(){
@@ -82,7 +83,26 @@ class Suenio {
 	} 
 }
 
-class AdoptarHijo inherits Suenio{
+class SuenioSimple inherits Suenio{
+	var felicidonios = 0
+	override method felicidonios() = felicidonios
+}
+
+class SuenioMultiple inherits Suenio {
+	const suenios = []
+	
+	override method felicidonios() = suenios.sum { suenio => suenio.felicidonios() } 
+
+	override method validar(persona) {
+		suenios.forEach { suenio => suenio.validar(persona) }
+	}
+	
+	override method realizar(persona) {
+		suenios.forEach { suenio => suenio.realizar(persona) }
+	}	
+}
+
+class AdoptarHijo inherits SuenioSimple{
 	const hijosAAdoptar
 	
 	override method validar(persona){
@@ -96,7 +116,7 @@ class AdoptarHijo inherits Suenio{
 	}
 }
 
-class Viajar inherits Suenio {
+class Viajar inherits SuenioSimple {
 	const lugar
 	
 	override method validar(persona){
@@ -108,7 +128,7 @@ class Viajar inherits Suenio {
 	}
 }
 
-object tenerHijo inherits Suenio {
+class TenerHijo inherits SuenioSimple {
 	
 	override method validar(persona){
 		
@@ -119,7 +139,7 @@ object tenerHijo inherits Suenio {
 	}
 }
 
-class ConseguirTrabajo inherits Suenio{
+class ConseguirTrabajo inherits SuenioSimple{
 	const salarioOfrecido
 	
 	override method validar(persona){
@@ -133,7 +153,7 @@ class ConseguirTrabajo inherits Suenio{
 	}
 }
 
-class Recibirse inherits Suenio {
+class Recibirse inherits SuenioSimple {
 	const carrera
 	
 	override method validar(persona){
