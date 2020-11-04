@@ -1,5 +1,4 @@
 
-
 class Persona {
 	const suenios = []
 	var felicidonios = 0
@@ -14,7 +13,7 @@ class Persona {
 	const salarioSoniado
 	
 	method cumplirSuenio(suenio){
-		if(suenios.sueniosPedientes().contains()){
+		if(!suenios.sueniosPendientes().contains(suenio)){
 				self.error("El sueño " + suenio + " no está pendiente")
 		}
 		suenio.cumplir(self)
@@ -46,6 +45,17 @@ class Persona {
 		return carrerasCompletadas.contains(carrera)
 	}
 	
+	method completarCarrera(carrera){
+		carrerasCompletadas.add(carrera)
+	}
+	
+	method sumarFelicidonios(felicidoniosNuevos){
+		felicidonios += felicidoniosNuevos
+	}
+	
+	method suenioMultiple(suenioMultiple){
+			
+	}
 }
 
 class Suenio {
@@ -56,7 +66,18 @@ class Suenio {
 		return !cumplido
 	}
 	
+	method validar(persona)
+	
+	method realizar(persona)
+	
 	method cumplir(persona){
+		self.validar(persona)
+		self.realizar(persona)
+		self.cumplir()
+		persona.sumarFelicidonios(felicidonios)
+	}
+	
+	method cumplir(){
 		cumplido = true
 	} 
 }
@@ -64,13 +85,13 @@ class Suenio {
 class AdoptarHijo inherits Suenio{
 	const hijosAAdoptar
 	
-	method validar(persona){
+	override method validar(persona){
 		if(persona.tieneHijos()){
 			persona.error("No se puede adoptar si se tiene un hijo")
 		}
 	}
 	
-	method realizar(persona){
+	override method realizar(persona){
 		persona.agregarHijos(hijosAAdoptar)
 	}
 }
@@ -78,22 +99,22 @@ class AdoptarHijo inherits Suenio{
 class Viajar inherits Suenio {
 	const lugar
 	
-	method validar(persona){
+	override method validar(persona){
 		
 	}
 	
-	method realizar(persona){
+	override method realizar(persona){
 		persona.viajarA(lugar)
 	}
 }
 
 object tenerHijo inherits Suenio {
 	
-	method validar(persona){
+	override method validar(persona){
 		
 	}
 	
-	method realizar(persona){
+	override method realizar(persona){
 		persona.agregarHijos(1)
 	}
 }
@@ -101,13 +122,13 @@ object tenerHijo inherits Suenio {
 class ConseguirTrabajo inherits Suenio{
 	const salarioOfrecido
 	
-	method validar(persona){
+	override method validar(persona){
 		if(persona.aceptaSalario(salarioOfrecido)){
 			
 		}
 	}
 	
-	method realizar(persona){
+	override method realizar(persona){
 		
 	}
 }
@@ -115,13 +136,17 @@ class ConseguirTrabajo inherits Suenio{
 class Recibirse inherits Suenio {
 	const carrera
 	
-	method validar(persona){
+	override method validar(persona){
 		if(persona.seRecibio(carrera)){
 			throw new Exception(message = "No se puede recibir dos veces de una misma carrera")
 		}
-		if(persona.quiereRecibirseDeEstaCarrera(carrera)){
+		if(!persona.quiereRecibirseDeEstaCarrera(carrera)){
 			throw new Exception(message = "No se puede recibir de una carrera que no quiere")
 		}
+	}
+	
+	override method realizar(persona){
+		persona.completarCarrera(carrera)
 	}
 }
 
