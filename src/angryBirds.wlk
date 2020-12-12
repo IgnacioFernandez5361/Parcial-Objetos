@@ -1,4 +1,4 @@
-object isla{
+object islaPajaro{
 	const property pajaros = #{}
 	
 	method pajarosFuertes() = pajaros.filter({pajaro => pajaro.esFuerte()})
@@ -6,6 +6,16 @@ object isla{
 	method fuerzaDeLaIsla() = self.pajarosFuertes().sumaDeFuerzasDePajaros()
 	
 	method sumaDeFuerzasDePajaros(unosPajaros) = unosPajaros.sum({pajaro => pajaro.conocerFuerza()}) 
+	
+	method atacarALaIslaCerdito(){
+		const pajaroElejido = pajaros.anyOne()
+		const objetivoADerribar = islaCerdito.obstaculoMasCercano()
+		if(pajaroElejido.puedeDerribarUnObstaculo(objetivoADerribar)){
+			islaCerdito.obstaculoDerribado(objetivoADerribar)
+		}
+	}
+	
+	method seRecuperaronLosHuevos() = islaCerdito.noTieneObstaculos()
 }
 
 class Pajaro {
@@ -28,6 +38,8 @@ class Pajaro {
 	method tranquilizarse(){
 		ira -= 5
 	}
+	
+	method puedeDerribarUnObstaculo(obstaculo) = self.conocerFuerza() > obstaculo.resistencia() 
 }
 
 class PajaroComun inherits Pajaro{
@@ -111,7 +123,7 @@ class Evento{
 object sesionDeManejoDeIra inherits Evento{
 	
 	override method ocurrirEvento(){
-		isla.pajaros().forEach({pajaro => pajaro.tranquilizarse()})
+		islaPajaro.pajaros().forEach({pajaro => pajaro.tranquilizarse()})
 	}
 }
 
@@ -120,7 +132,7 @@ class InvasionDeCerditos inherits Evento{
 	const cantidadDeCerditosQueInvaden
 	
 	override method ocurrirEvento(){
-		cantidadDeCerditosQueInvaden.times(isla.pajaros().forEach({pajaro => pajaro.enojarse()}))
+		cantidadDeCerditosQueInvaden.times(islaPajaro.pajaros().forEach({pajaro => pajaro.enojarse()}))
 	}
 }
 
@@ -142,14 +154,59 @@ class SerieDeEventosDesafortunados inherits Evento{
 	}
 }
 
+object islaCerdito{
+	const property obstaculos = #{}
+	
+	method obstaculoMasCercano() = return obstaculos.first()
+	
+	method obstaculoDerribado(unObstaculo){
+		obstaculos.remove(unObstaculo)
+	}
+	
+	method noTieneObstaculos() = obstaculos.isEmpty()
+}
 
+class Obstaculo{
+	
+	method resistencia()
+}
 
+class Pared inherits Obstaculo{
+	const ancho
+	
+	override method resistencia() = ancho 
+}
 
+class ParedDeVidrio inherits Pared{
+	override method resistencia() = super() * 10
+}
 
+class ParedDeMadera inherits Pared{
+	override method resistencia() = super() * 25
+}
 
+class ParedDePiedra inherits Pared{
+	override method resistencia() = super() * 50
+}
 
+object cerditoObrero inherits Obstaculo{
+	override method resistencia() =  50
+}
 
+class CerditoArmado inherits Obstaculo{
+	override method resistencia() =  10
+}
 
+class CerditoConEscudo inherits CerditoArmado{
+	const resistenciaEscudo
+	
+	override method resistencia() =  super() * resistenciaEscudo
+}
 
+class CerditoConCasco inherits CerditoArmado{
+	const resistenciaCasco
+	
+	override method resistencia() =  super() * resistenciaCasco
+}
 
 
